@@ -1,15 +1,16 @@
 package image
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
 	"github.com/hasty-ai/hasty-go"
-	"github.com/hasty-ai/hasty-go/client"
+	"github.com/hasty-ai/hasty-go/backend"
 )
 
 // New instantiates images client
-func New(backend *client.Backend) *Client {
+func New(backend *backend.Backend) *Client {
 	return &Client{
 		backend: backend,
 	}
@@ -17,14 +18,18 @@ func New(backend *client.Backend) *Client {
 
 // Client to access images API
 type Client struct {
-	backend *client.Backend
+	backend *backend.Backend
 }
 
-// Upload one single image
-func (c *Client) Upload(request *hasty.ImageUploadParams) (hasty.Image, error) {
+// UploadExternal one single image from an external source
+func (c *Client) UploadExternal(ctx context.Context, params *hasty.ImageUploadExternalParams) (*hasty.Image, error) {
+	if params.Project == nil {
+		return nil, fmt.Errorf("project must be specified")
+	}
+	path := fmt.Sprintf("/v1/projects/%s/images", *params.Project)
 	method := http.MethodPost
-	path := fmt.Sprintf("/v1/projects/%s/images", request.Project)
-	response:= ??
-	status, err := c.backend.Request(method, path, request, &response)
-	return response, err
+	var response hasty.Image
+	status, err := c.backend.Request(ctx, method, path, params, &response)
+	_ = status
+	return nil, err
 }
