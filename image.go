@@ -34,7 +34,7 @@ type ImageClient struct {
 
 // UploadExternal one single image from an external source
 func (c *ImageClient) UploadExternal(ctx context.Context, params *ImageUploadExternalParams) (*Image, error) {
-	if params.Project == nil {
+	if params.Project == nil || *params.Project == "" {
 		return nil, fmt.Errorf("project must be specified")
 	}
 	path := fmt.Sprintf("/v1/projects/%s/images", *params.Project)

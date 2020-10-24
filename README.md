@@ -34,5 +34,5 @@ params := &hasty.ImageUploadExternalParams{
 	Filename: hasty.String("cat.jpg"),
 }
 image, err := client.Image.UploadExternal(context.TODO(), params)
-fmt.Printf("%+v, %+v", image, err)
+fmt.Printf("%v, %v", image, err)
 ```
