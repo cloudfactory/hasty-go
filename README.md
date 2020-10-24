@@ -21,9 +21,9 @@ Import it into your package:
 ```
 import "github.com/hasty-ai/hasty-go"
 ```
-Obtain and provide API key, and instamtiate the client:
+Obtain and provide API key, and instantiate the client:
 ```
-key := "hK0WXPfeS..." // # API key obtained from Hasty
+key := "hK0WXPfeS..."
 client := hasty.NewClient(key)
 
 params := &hasty.ImageUploadExternalParams{
@@ -31,7 +31,7 @@ params := &hasty.ImageUploadExternalParams{
 	Dataset:  hasty.String("c66779fe-043e-40c6-a419-a9ddcd5ccbff"),
 	URL:      hasty.String("https://example.com/cats/one.jpg"),
 	Copy:     hasty.Bool(true),
-	Filename: hasty.String("cat.jpg"),
+	Filename: hasty.String("cat-one.jpg"),
 }
 image, err := client.Image.UploadExternal(context.TODO(), params)
 fmt.Printf("%v, %v", image, err)

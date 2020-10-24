@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-// NewClient is a sugegsted way to instantiate a new client with default backend. It accepts an API key that has to be
+// NewClient is a suggested way to instantiate a new client with default backend. It accepts an API key that has to be
 // obtained using Hasty application
 func NewClient(key string) *Client {
 	b := NewAPIKeyBackend(key)

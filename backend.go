@@ -26,14 +26,14 @@ func NewAPIKeyBackend(key string) *APIKeyBackend {
 	}
 }
 
-// APIKeyBackend allows client to execute authorised HTTP calls against specific endpoint using API key authorisation
+// APIKeyBackend allows client to execute authorized HTTP calls against specific endpoint using API key authorization
 type APIKeyBackend struct {
 	Endpoint string // API endpoint
 	key      string
 	client   *http.Client
 }
 
-// Request performs an arbitrary HTTP Request, sending payload marshaled to JSON, and unmarshaling
+// Request performs an arbitrary HTTP Request, sending payload marshaled to JSON, and unmarshalling
 // the response into respective variable (if provided).
 // TODO: evaluate if stastus should be returned together with error or not in case HTTP call actually has happened
 func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payload, response interface{}) (int, error) {
@@ -67,7 +67,7 @@ func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payloa
 	}
 	err = json.Unmarshal(body, response)
 	if err != nil {
-		return resp.StatusCode, fmt.Errorf("unable to unmarshal HTTP response bory as JSON into provided container: %w", err)
+		return resp.StatusCode, fmt.Errorf("unable to unmarshal HTTP response body as JSON: %w", err)
 	}
 	return resp.StatusCode, nil
 }
