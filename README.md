@@ -1,5 +1,7 @@
 # Hasty API Go client
 
+![lint](https://github.com/actions/hello-world/workflows/lint/badge.svg)
+
 This is a client for Hasty API for gophers.
 
 Hasty is an image annotation tool that makes it easier, faster and more accurate to teach machines the context of what they are looking at. Learn more more at:
