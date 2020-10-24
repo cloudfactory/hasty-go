@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Check code formatting
           command: |
-            export UNFORMATTED=`gofmt -l services tests libs tools`
+            export UNFORMATTED=`gofmt -l .`
             [ -z "$UNFORMATTED" ] && exit 0
             echo "Code not formatted, use gofmt for these files:"
             echo $UNFORMATTED
