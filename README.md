@@ -1,6 +1,6 @@
 # Hasty API Go client
 
-![lint](https://github.com/actions/hello-world/workflows/lint/badge.svg)
+[![Build](https://github.com/hasty-ai/hasty-go/workflows/Build/badge.svg)](https://github.com/hasty-ai/hasty-go/actions)
 
 This is a client for Hasty API for gophers.
 
