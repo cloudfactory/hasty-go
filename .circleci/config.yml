@@ -22,10 +22,7 @@ jobs:
       - run:
           name: Lint code
           command: |
-            ./bin/golangci-lint run --skip-dirs="libs/protos/" \
-                                    services/... \
-                                    libs/... \
-                                    tests/...
+            ./bin/golangci-lint run
 
   test:
     docker:
