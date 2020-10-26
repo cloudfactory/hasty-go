@@ -23,7 +23,7 @@ func NewClientWithBackend(b Backend) *Client {
 // Backend can perform authenticated HTTP requests for client. It can be substituted with mock
 // or with some custom authentication method
 type Backend interface {
-	Request(ctx context.Context, method, path string, payload, response interface{}) (int, error)
+	Request(ctx context.Context, method, path string, payload, response interface{}) error
 }
 
 // Client to access whole Hasty API

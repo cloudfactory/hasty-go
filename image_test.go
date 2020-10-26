@@ -7,8 +7,8 @@ import (
 
 type dummyBackend struct{}
 
-func (b *dummyBackend) Request(ctx context.Context, method, path string, payload, response interface{}) (int, error) {
-	return 200, nil
+func (b *dummyBackend) Request(ctx context.Context, method, path string, payload, response interface{}) error {
+	return nil
 }
 
 func TestImageClient_UploadExternal(t *testing.T) {
