@@ -67,8 +67,14 @@ func (c *ImageClient) UploadExternal(ctx context.Context, params *ImageUploadExt
 	}
 	switch status {
 	case http.StatusOK:
+	case http.StatusUnauthorized:
+		return nil, ErrAuth
+	case http.StatusForbidden:
+		return nil, ErrPerm
+	case http.StatusNotFound:
+		return nil, ErrNotFound
 	case http.StatusTooManyRequests:
-		return nil, RateError
+		return nil, ErrRate
 	default:
 		return nil, fmt.Errorf("unexpected API response status: %d", status)
 	}
