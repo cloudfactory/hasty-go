@@ -68,7 +68,7 @@ func (c *DatasetClient) Delete(ctx context.Context, id string, params *DatasetPa
 	path := fmt.Sprintf("/v1/projects/%s/datasets/%s", *params.Project, id)
 	method := http.MethodDelete
 	if err := c.backend.Request(ctx, method, path, params, nil); err != nil {
-		return nil, fmt.Errorf("unable to delete dataset: %w", err)
+		return fmt.Errorf("unable to delete dataset: %w", err)
 	}
 	return nil
 }
