@@ -8,9 +8,9 @@ import (
 
 // DatasetParams is parameters set for creating or updating a dataset
 type DatasetParams struct {
-	Project *string `json:"-"`
-	Name    *string `json:"name"`
-	Order   *int    `json:"norder"`
+	Project *string  `json:"-"`
+	Name    *string  `json:"name"`
+	Order   *float64 `json:"norder"`
 }
 
 // Dataset describes an dataser information that API may return
