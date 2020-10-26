@@ -43,7 +43,7 @@ func (c *DatasetClient) New(ctx context.Context, params *DatasetParams) (*Datase
 	if err := c.backend.Request(ctx, method, path, params, &response); err != nil {
 		return nil, fmt.Errorf("unable to create dataset: %w", err)
 	}
-	return &response, err
+	return &response, nil
 }
 
 // Update updates an existing dataset
@@ -57,7 +57,7 @@ func (c *DatasetClient) Update(ctx context.Context, id string, params *DatasetPa
 	if err := c.backend.Request(ctx, method, path, params, &response); err != nil {
 		return nil, fmt.Errorf("unable to update dataset: %w", err)
 	}
-	return &response, err
+	return &response, nil
 }
 
 // Delete deletes an existing dataset
