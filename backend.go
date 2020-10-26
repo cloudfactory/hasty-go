@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-const defaultBackendAPI = "https://api.hasty.ai/"
+const defaultBackendAPI = "https://api.hasty.ai"
 const headerAPIKey = "X-API-Key"
 const headerContentType = "Content-Type"
 const contentTypeJSON = "application/json"
@@ -41,7 +41,7 @@ func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payloa
 		return fmt.Errorf("unable to marshal JSON: %w", err)
 	}
 
-	url := fmt.Sprintf("%s/%s", b.Endpoint, path)
+	url := fmt.Sprintf("%s%s", b.Endpoint, path)
 	req, err := http.NewRequestWithContext(ctx, method, url, bytes.NewReader(body))
 	if err != nil {
 		return fmt.Errorf("unable to create HTTP request: %w", err)
