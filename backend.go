@@ -35,17 +35,16 @@ type APIKeyBackend struct {
 
 // Request performs an arbitrary HTTP Request, sending payload marshaled to JSON, and unmarshalling
 // the response into respective variable (if provided).
-// TODO: evaluate if stastus should be returned together with error or not in case HTTP call actually has happened
-func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payload, response interface{}) (int, error) {
+func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payload, response interface{}) error {
 	body, err := json.Marshal(payload)
 	if err != nil {
-		return 0, fmt.Errorf("unable to marshal JSON: %w", err)
+		return fmt.Errorf("unable to marshal JSON: %w", err)
 	}
 
 	url := fmt.Sprintf("%s/%s", b.Endpoint, path)
 	req, err := http.NewRequestWithContext(ctx, method, url, bytes.NewReader(body))
 	if err != nil {
-		return 0, fmt.Errorf("unable to create HTTP request: %w", err)
+		return fmt.Errorf("unable to create HTTP request: %w", err)
 	}
 
 	req.Header[headerContentType] = []string{contentTypeJSON}
@@ -53,21 +52,37 @@ func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payloa
 
 	resp, err := b.client.Do(req)
 	if err != nil {
-		return 0, fmt.Errorf("unable to perform HTTP request: %w", err)
+		return fmt.Errorf("unable to perform HTTP request: %w", err)
 	}
 	defer resp.Body.Close()
 
+	switch resp.StatusCode {
+	case http.StatusOK:
+	case http.StatusAccepted:
+	case http.StatusNoContent:
+	case http.StatusUnauthorized:
+		return ErrAuth
+	case http.StatusForbidden:
+		return ErrPerm
+	case http.StatusNotFound:
+		return ErrNotFound
+	case http.StatusTooManyRequests:
+		return ErrRate
+	default:
+		return fmt.Errorf("unexpected API response status: %d", resp.StatusCode)
+	}
+
 	if response == nil {
-		return resp.StatusCode, nil
+		return nil
 	}
 
 	body, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return resp.StatusCode, fmt.Errorf("unable to read from HTTP response body: %w", err)
+		return fmt.Errorf("unable to read from HTTP response body: %w", err)
 	}
 	err = json.Unmarshal(body, response)
 	if err != nil {
-		return resp.StatusCode, fmt.Errorf("unable to unmarshal HTTP response body as JSON: %w", err)
+		return fmt.Errorf("unable to unmarshal HTTP response body as JSON: %w", err)
 	}
-	return resp.StatusCode, nil
+	return nil
 }

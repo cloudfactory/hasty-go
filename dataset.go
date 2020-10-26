@@ -40,21 +40,10 @@ func (c *DatasetClient) New(ctx context.Context, params *DatasetParams) (*Datase
 	path := fmt.Sprintf("/v1/projects/%s/datasets", *params.Project)
 	method := http.MethodPost
 	var response Dataset
-	status, err := c.backend.Request(ctx, method, path, params, &response)
-	switch status {
-	case http.StatusOK:
-	case http.StatusUnauthorized:
-		return nil, ErrAuth
-	case http.StatusForbidden:
-		return nil, ErrPerm
-	case http.StatusNotFound:
-		return nil, ErrNotFound
-	case http.StatusTooManyRequests:
-		return nil, ErrRate
-	default:
-		return nil, fmt.Errorf("unexpected API response status: %d", status)
+	if err := c.backend.Request(ctx, method, path, params, &response); err != nil {
+		return nil, fmt.Errorf("unable to create dataset: %w", err)
 	}
-	return &response, err
+	return &response, nil
 }
 
 // Update updates an existing dataset
@@ -65,21 +54,10 @@ func (c *DatasetClient) Update(ctx context.Context, id string, params *DatasetPa
 	path := fmt.Sprintf("/v1/projects/%s/datasets", *params.Project)
 	method := http.MethodPut
 	var response Dataset
-	status, err := c.backend.Request(ctx, method, path, params, &response)
-	switch status {
-	case http.StatusOK:
-	case http.StatusUnauthorized:
-		return nil, ErrAuth
-	case http.StatusForbidden:
-		return nil, ErrPerm
-	case http.StatusNotFound:
-		return nil, ErrNotFound
-	case http.StatusTooManyRequests:
-		return nil, ErrRate
-	default:
-		return nil, fmt.Errorf("unexpected API response status: %d", status)
+	if err := c.backend.Request(ctx, method, path, params, &response); err != nil {
+		return nil, fmt.Errorf("unable to update dataset: %w", err)
 	}
-	return &response, err
+	return &response, nil
 }
 
 // Delete deletes an existing dataset
@@ -89,19 +67,8 @@ func (c *DatasetClient) Delete(ctx context.Context, id string, params *DatasetPa
 	}
 	path := fmt.Sprintf("/v1/projects/%s/datasets/%s", *params.Project, id)
 	method := http.MethodDelete
-	status, err := c.backend.Request(ctx, method, path, params, nil)
-	switch status {
-	case http.StatusNoContent:
-	case http.StatusUnauthorized:
-		return ErrAuth
-	case http.StatusForbidden:
-		return ErrPerm
-	case http.StatusNotFound:
-		return ErrNotFound
-	case http.StatusTooManyRequests:
-		return ErrRate
-	default:
-		return fmt.Errorf("unexpected API response status: %d", status)
+	if err := c.backend.Request(ctx, method, path, params, nil); err != nil {
+		return fmt.Errorf("unable to delete dataset: %w", err)
 	}
-	return err
+	return nil
 }

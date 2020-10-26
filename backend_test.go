@@ -50,13 +50,8 @@ func TestAPIKeyBackend(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			status, err := b.Request(ctx, tt.method, tt.path, tt.payload, tt.response)
-			if err != nil {
+			if err := b.Request(ctx, tt.method, tt.path, tt.payload, tt.response); err != nil {
 				t.Errorf("APIKeyBackend.Request() error = %v", err)
-				return
-			}
-			if status != http.StatusOK {
-				t.Errorf("Expected status 200 OK, got: %d", status)
 				return
 			}
 			req := <-reqs

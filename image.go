@@ -61,22 +61,8 @@ func (c *ImageClient) UploadExternal(ctx context.Context, params *ImageUploadExt
 	path := fmt.Sprintf("/v1/projects/%s/images", *params.Project)
 	method := http.MethodPost
 	var response Image
-	status, err := c.backend.Request(ctx, method, path, params, &response)
-	if err != nil {
-		return nil, fmt.Errorf("unable to execute upload request: %w", err)
-	}
-	switch status {
-	case http.StatusOK:
-	case http.StatusUnauthorized:
-		return nil, ErrAuth
-	case http.StatusForbidden:
-		return nil, ErrPerm
-	case http.StatusNotFound:
-		return nil, ErrNotFound
-	case http.StatusTooManyRequests:
-		return nil, ErrRate
-	default:
-		return nil, fmt.Errorf("unexpected API response status: %d", status)
+	if err := c.backend.Request(ctx, method, path, params, &response); err != nil {
+		return nil, fmt.Errorf("unable to upload image from external source: %w", err)
 	}
 	return &response, nil
 }
