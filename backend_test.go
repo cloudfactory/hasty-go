@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -17,6 +18,7 @@ type testReq struct {
 	method string
 	path   string
 	body   string
+	key    string
 }
 
 func TestAPIKeyBackend(t *testing.T) {
@@ -27,6 +29,7 @@ func TestAPIKeyBackend(t *testing.T) {
 			method: r.Method,
 			path:   r.URL.Path,
 			body:   string(body),
+			key:    strings.Join(r.Header["X-Api-Key"], ","),
 		}
 		fmt.Fprintln(w, `{"foo":"bar"}`)
 	}))
@@ -60,6 +63,9 @@ func TestAPIKeyBackend(t *testing.T) {
 			}
 			if req.path != tt.path {
 				t.Errorf("Got path = %s, want %s", req.path, tt.path)
+			}
+			if req.key != "secret-api-key" {
+				t.Errorf("Got key = %s, want secret-api-key", req.key)
 			}
 			// Mind, it will be json wrapped in quotes!
 			if req.body != fmt.Sprintf(`"%s"`, tt.payload) {
