@@ -6,6 +6,19 @@ import (
 	"net/http"
 )
 
+// ImageStatus for passing as status of the image
+type ImageStatus string
+
+// All possible image statuses
+const (
+	ImageStatusNew          ImageStatus = "NEW"
+	ImageStatusInProgress   ImageStatus = "IN PROGRESS"
+	ImageStatusDone         ImageStatus = "DONE"
+	ImageStatusSkipped      ImageStatus = "SKIPPED"
+	ImageStatusToReview     ImageStatus = "TO REVIEW"
+	ImageStatusAutoLabelled ImageStatus = "AUTO-LABELLED"
+)
+
 // ImageUploadExternalParams is used for uploading images from external sources
 type ImageUploadExternalParams struct {
 	Project  *string `json:"-"`
@@ -17,7 +30,15 @@ type ImageUploadExternalParams struct {
 
 // Image describes an image information that API may return
 type Image struct {
-	ID *string `json:"image_id"`
+	ID           *string      `json:"id"`
+	Height       *int         `json:"height"`
+	Width        *int         `json:"width"`
+	Format       *string      `json:"format"`
+	Mode         *string      `json:"mode"`
+	Name         *string      `json:"name"`
+	Status       *ImageStatus `json:"status"`
+	OriginalURL  *string      `json:"public_url"`
+	ThumbnailURL *string      `json:"thumbnail_url"`
 }
 
 // NewImageClient instantiates images client
@@ -41,6 +62,21 @@ func (c *ImageClient) UploadExternal(ctx context.Context, params *ImageUploadExt
 	method := http.MethodPost
 	var response Image
 	status, err := c.backend.Request(ctx, method, path, params, &response)
-	_ = status
-	return nil, err
+	if err != nil {
+		return nil, fmt.Errorf("unable to execute upload request: %w", err)
+	}
+	switch status {
+	case http.StatusOK:
+	case http.StatusUnauthorized:
+		return nil, ErrAuth
+	case http.StatusForbidden:
+		return nil, ErrPerm
+	case http.StatusNotFound:
+		return nil, ErrNotFound
+	case http.StatusTooManyRequests:
+		return nil, ErrRate
+	default:
+		return nil, fmt.Errorf("unexpected API response status: %d", status)
+	}
+	return &response, nil
 }
