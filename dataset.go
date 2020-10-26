@@ -15,9 +15,9 @@ type DatasetParams struct {
 
 // Dataset describes an dataser information that API may return
 type Dataset struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Order int    `json:"norder"`
+	ID    string  `json:"id"`
+	Name  string  `json:"name"`
+	Order float64 `json:"norder"`
 }
 
 // NewDatasetClient instantiates dataset client
