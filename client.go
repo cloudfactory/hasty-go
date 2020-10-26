@@ -16,6 +16,7 @@ func NewClientWithBackend(b Backend) *Client {
 	return &Client{
 		backend: b,
 		Image:   NewImageClient(b),
+		Dataset: NewDatasetClient(b),
 	}
 }
 
@@ -29,4 +30,5 @@ type Backend interface {
 type Client struct {
 	backend Backend
 	Image   *ImageClient
+	Dataset *DatasetClient
 }
