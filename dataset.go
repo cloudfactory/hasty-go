@@ -51,7 +51,7 @@ func (c *DatasetClient) Update(ctx context.Context, id string, params *DatasetPa
 	if params.Project == nil || *params.Project == "" {
 		return nil, fmt.Errorf("project must be specified")
 	}
-	path := fmt.Sprintf("/v1/projects/%s/datasets", *params.Project)
+	path := fmt.Sprintf("/v1/projects/%s/datasets/%s", *params.Project, id)
 	method := http.MethodPut
 	var response Dataset
 	if err := c.backend.Request(ctx, method, path, params, &response); err != nil {
