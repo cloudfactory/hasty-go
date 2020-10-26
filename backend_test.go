@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 )
 
@@ -26,7 +25,7 @@ func TestAPIKeyBackend(t *testing.T) {
 		body, _ := ioutil.ReadAll(r.Body)
 		reqs <- testReq{
 			method: r.Method,
-			path:   strings.TrimPrefix(r.URL.Path, "/"),
+			path:   r.URL.Path,
 			body:   string(body),
 		}
 		fmt.Fprintln(w, `{"foo":"bar"}`)
@@ -44,9 +43,9 @@ func TestAPIKeyBackend(t *testing.T) {
 		payload  string
 		response interface{}
 	}{
-		{"regular", http.MethodPut, "bar/baz/42", "body", &testResp{}},
-		{"empty body", http.MethodGet, "foo", "", &testResp{}},
-		{"with no resp expected", http.MethodDelete, "baz/42", "another body", nil},
+		{"regular", http.MethodPut, "/bar/baz/42", "body", &testResp{}},
+		{"empty body", http.MethodGet, "/foo", "", &testResp{}},
+		{"with no resp expected", http.MethodDelete, "/baz/42", "another body", nil},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
