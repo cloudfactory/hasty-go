@@ -91,7 +91,7 @@ func (c *DatasetClient) Delete(ctx context.Context, id string, params *DatasetPa
 	method := http.MethodDelete
 	status, err := c.backend.Request(ctx, method, path, params, nil)
 	switch status {
-	case http.StatusOK:
+	case http.StatusNoContent:
 	case http.StatusUnauthorized:
 		return ErrAuth
 	case http.StatusForbidden:
