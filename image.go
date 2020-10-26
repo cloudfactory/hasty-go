@@ -30,15 +30,15 @@ type ImageUploadExternalParams struct {
 
 // Image describes an image information that API may return
 type Image struct {
-	ID           *string      `json:"id"`
-	Height       *int         `json:"height"`
-	Width        *int         `json:"width"`
-	Format       *string      `json:"format"`
-	Mode         *string      `json:"mode"`
-	Name         *string      `json:"name"`
-	Status       *ImageStatus `json:"status"`
-	OriginalURL  *string      `json:"public_url"`
-	ThumbnailURL *string      `json:"thumbnail_url"`
+	ID           string      `json:"id"`
+	Height       int         `json:"height"`
+	Width        int         `json:"width"`
+	Format       string      `json:"format"`
+	Mode         string      `json:"mode"`
+	Name         string      `json:"name"`
+	Status       ImageStatus `json:"status"`
+	OriginalURL  string      `json:"public_url"`
+	ThumbnailURL string      `json:"thumbnail_url"`
 }
 
 // NewImageClient instantiates images client
