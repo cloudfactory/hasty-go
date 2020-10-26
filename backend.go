@@ -48,7 +48,7 @@ func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payloa
 	}
 
 	req.Header[headerContentType] = []string{contentTypeJSON}
-	req.Header[headerAPIKey] = []string{contentTypeJSON}
+	req.Header[headerAPIKey] = []string{b.key}
 
 	resp, err := b.client.Do(req)
 	if err != nil {
