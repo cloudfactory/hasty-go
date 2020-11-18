@@ -11,6 +11,7 @@ import (
 
 const defaultBackendAPI = "https://api.hasty.ai"
 const headerAPIKey = "X-API-Key"
+const headerRequestID = "X-Request-ID"
 const headerContentType = "Content-Type"
 const contentTypeJSON = "application/json"
 
@@ -55,31 +56,35 @@ func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payloa
 		return fmt.Errorf("unable to perform HTTP request: %w", err)
 	}
 	defer resp.Body.Close()
+	body, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("unable to read from HTTP response body: %w", err)
+	}
 
 	switch resp.StatusCode {
 	case http.StatusOK:
 	case http.StatusAccepted:
 	case http.StatusNoContent:
-	case http.StatusUnauthorized:
-		return ErrAuth
-	case http.StatusForbidden:
-		return ErrPerm
-	case http.StatusNotFound:
-		return ErrNotFound
-	case http.StatusTooManyRequests:
-		return ErrRate
+	case http.StatusUnauthorized,
+		http.StatusForbidden,
+		http.StatusNotFound,
+		http.StatusTooManyRequests,
+		http.StatusInternalServerError:
+		var apiErr Error
+		if err := json.Unmarshal(body, &apiErr); err != nil {
+			return fmt.Errorf("unexpected API response status: %d, body: %s", resp.StatusCode, string(body))
+		}
+		apiErr.Status = resp.StatusCode
+		apiErr.RequestID = resp.Header.Get(headerRequestID)
+		return apiErr
 	default:
-		return fmt.Errorf("unexpected API response status: %d", resp.StatusCode)
+		return fmt.Errorf("unexpected API response status: %d, body: %s", resp.StatusCode, string(body))
 	}
 
 	if response == nil {
 		return nil
 	}
 
-	body, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("unable to read from HTTP response body: %w", err)
-	}
 	err = json.Unmarshal(body, response)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal HTTP response body as JSON: %w", err)

@@ -1,15 +1,30 @@
 package hasty
 
-import "errors"
+import (
+	"fmt"
+	"strings"
+)
 
-// ErrRate will be returned if API requests rate is too high
-var ErrRate = errors.New("too many requests")
+var _ error = Error{}
 
-// ErrNotFound will be returned if item is not found
-var ErrNotFound = errors.New("not found")
+// Error is used to represent API call error with details
+type Error struct {
+	Status    int    `json:"-"`
+	RequestID string `json:"-"`
+	Code      string `json:"code"`
+	Message   string `json:"message"`
+}
 
-// ErrAuth will be returned if authentication fails
-var ErrAuth = errors.New("not authenticated")
-
-// ErrPerm will be returned if authorization fails
-var ErrPerm = errors.New("permission denied")
+// Error returns string implementation of error
+func (e Error) Error() string {
+	message := []string{
+		fmt.Sprintf("API request %s failed with status %d", e.RequestID, e.Status),
+	}
+	if e.Code != "" {
+		message = append(message, fmt.Sprintf("code %s", e.Code))
+	}
+	if e.Message != "" {
+		message = append(message, fmt.Sprintf("message %s", e.Message))
+	}
+	return strings.Join(message, ", ")
+}
