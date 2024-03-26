@@ -1,6 +1,6 @@
 # Hasty API Go client
 
-[![Build](https://github.com/hasty-ai/hasty-go/workflows/Build/badge.svg)](https://github.com/hasty-ai/hasty-go/actions)
+[![Build](https://github.com/cloudfactory/hasty-go/workflows/Build/badge.svg)](https://github.com/cloudfactory/hasty-go/actions)
 
 This is a client for Hasty API for gophers.
 
@@ -15,11 +15,11 @@ First go to workspace settings, then "API accounts". Create new API account for 
 
 Get Hasty client:
 ```
-go get -u github.com/hasty-ai/hasty-go
+go get -u github.com/cloudfactory/hasty-go
 ```
 Import it into your package:
 ```
-import "github.com/hasty-ai/hasty-go"
+import "github.com/cloudfactory/hasty-go"
 ```
 Obtain and provide API key, and instantiate the client:
 ```

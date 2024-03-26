@@ -1,3 +1,3 @@
-module github.com/hasty-ai/hasty-go
+module github.com/cloudfactory/hasty-go
 
 go 1.14
