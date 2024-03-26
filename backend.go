@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -56,7 +56,7 @@ func (b *APIKeyBackend) Request(ctx context.Context, method, path string, payloa
 		return fmt.Errorf("unable to perform HTTP request: %w", err)
 	}
 	defer resp.Body.Close()
-	body, err = ioutil.ReadAll(resp.Body)
+	body, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return fmt.Errorf("unable to read from HTTP response body: %w", err)
 	}

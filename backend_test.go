@@ -3,7 +3,7 @@ package hasty
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -24,7 +24,7 @@ type testReq struct {
 func TestAPIKeyBackend(t *testing.T) {
 	reqs := make(chan testReq, 1)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, _ := ioutil.ReadAll(r.Body)
+		body, _ := io.ReadAll(r.Body)
 		reqs <- testReq{
 			method: r.Method,
 			path:   r.URL.Path,
